@@ -57,12 +57,12 @@ export default function MovieGrid({ movies, loading }) {
     );
   }
 
-  // Check if movie is in watchlist
+  // watchlist-d baigaag shalgah
   const isInWatchlist = (movieId) => {
     return watchlist.some((movie) => movie.id === movieId);
   };
 
-  // Toggle watchlist
+  // watchlist toggle hiih
   const handleWatchlistToggle = (movie, e) => {
     e.preventDefault();
     e.stopPropagation();

@@ -3,9 +3,11 @@ import { createContext, useState, useEffect } from "react";
 export const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("theme") === "dark";
+  });
 
-  // Load from localStorage on mount
+  // localStorage-eesee data load hiih
   useEffect(() => {
     const saved = localStorage.getItem("theme");
     if (saved) {
@@ -13,7 +15,7 @@ export function ThemeProvider({ children }) {
     }
   }, []);
 
-  // Apply theme changes to document and save to localStorage
+  // document-d theme uurchlugduh uyd uurchlult hiij localStorage-ruu hadgalah
   useEffect(() => {
     if (typeof document !== "undefined") {
       if (darkMode) {

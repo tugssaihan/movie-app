@@ -7,20 +7,28 @@ import Filters from "./components/Filters.jsx";
 import MovieGrid from "./components/MovieGrid.jsx";
 
 export default function App() {
+  // theme context
   const { darkMode } = useContext(ThemeContext);
+
+  // kinonii datag hadgalah state
   const [movies, setMovies] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Filters
+  // filter neej haah state
+  const [filtersClosed, setFiltersClosed] = useState(true);
+
+  // loading, error hadgalah state-uud
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // filter hiihed heregtei state-uud
   const [genres, setGenres] = useState([]);
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [startYear, setStartYear] = useState("");
   const [endYear, setEndYear] = useState("");
   const [sortBy, setSortBy] = useState("popularity.desc");
 
-  // Fetch genres list
+  // kinonuudiin genre-iig avah effect
   useEffect(() => {
     fetch(
       `https://api.themoviedb.org/3/genre/movie/list?api_key=${
@@ -28,17 +36,20 @@ export default function App() {
       }&language=en-US`
     )
       .then((res) => res.json())
+      // avsan data-gaa genres state-d hadgalna
       .then((data) => setGenres(data.genres || []))
       .catch((err) => console.error("Error fetching genres:", err));
   }, []);
 
-  // Fetch movies
+  // kinonii ugugdliig avah effect
   useEffect(() => {
     setLoading(true);
     setError(null);
 
     let url = "";
 
+    // 3 >= char-tai bol kino haih API-g duudna
+    // ugui bol discover hesgiin kinog avna
     if (searchTerm.length > 2) {
       url = `https://api.themoviedb.org/3/search/movie?api_key=${
         import.meta.env.VITE_TMDB_API_KEY
@@ -47,6 +58,7 @@ export default function App() {
       url = `https://api.themoviedb.org/3/discover/movie?api_key=${
         import.meta.env.VITE_TMDB_API_KEY
       }&sort_by=${sortBy}`;
+      // songoson filter-uudiig API hailtad oruulna
       if (selectedGenres.length > 0) {
         url += `&with_genres=${selectedGenres.join(",")}`;
       }
@@ -54,11 +66,13 @@ export default function App() {
       if (endYear) url += `&primary_release_date.lte=${endYear}-12-31`;
     }
 
+    // kinonii ugugdliig API-s avna
     fetch(url)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch movies");
         return res.json();
       })
+      // movies state-dee hadgalna
       .then((data) => {
         setMovies(data.results || []);
         setLoading(false);
@@ -68,13 +82,16 @@ export default function App() {
         setError("Failed to load movies. Please try again.");
         setLoading(false);
       });
+    // searchTerm bolon filteruud uurchlugduh uyd dahij render hiine
   }, [searchTerm, selectedGenres, startYear, endYear, sortBy]);
 
+  // results header text-iig butsaana
   const getResultsText = () => {
     if (loading) return "Loading...";
     if (error) return "Error";
     if (searchTerm.length > 2) {
       const count = movies?.length || 0;
+      // hailt hiigeed oldvol butsaah text
       return `Search Results ${count > 0 ? `(${count} movies)` : ""}`;
     }
 
@@ -82,12 +99,15 @@ export default function App() {
       selectedGenres.length + (startYear ? 1 : 0) + (endYear ? 1 : 0);
     if (filterCount > 0) {
       const count = movies?.length || 0;
+      // filter hiij haisan bol butsaah text
       return `Filtered Movies ${count > 0 ? `(${count} found)` : ""}`;
     }
 
+    // hailt bolon filter hiigegui bol butsaah text
     return "Discover Movies";
   };
 
+  // filter-uudiig ustgah funkts
   const clearAllFilters = () => {
     setSelectedGenres([]);
     setStartYear("");
@@ -96,6 +116,7 @@ export default function App() {
     setSearchTerm("");
   };
 
+  // active filter baigaag hadgalah
   const hasActiveFilters =
     selectedGenres.length > 0 || startYear || endYear || searchTerm.length > 2;
 
@@ -152,6 +173,13 @@ export default function App() {
               Filters
             </h3>
 
+            <button
+              onClick={() => setFiltersClosed(!filtersClosed)}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-200 bg-slate-700/50 hover:bg-slate-600/50 text-gray-300"
+            >
+              {filtersClosed ? "Show Filters ▲" : "Hide Filters ▼"}
+            </button>
+
             {hasActiveFilters && (
               <button
                 onClick={clearAllFilters}
@@ -166,22 +194,27 @@ export default function App() {
             )}
           </div>
 
-          <Filters
-            genres={genres}
-            selectedGenres={selectedGenres}
-            setSelectedGenres={setSelectedGenres}
-            startYear={startYear}
-            setStartYear={setStartYear}
-            endYear={endYear}
-            setEndYear={setEndYear}
-            sortBy={sortBy}
-            setSortBy={setSortBy}
-          />
+          {!filtersClosed && (
+            <Filters
+              genres={genres}
+              selectedGenres={selectedGenres}
+              setSelectedGenres={setSelectedGenres}
+              startYear={startYear}
+              setStartYear={setStartYear}
+              endYear={endYear}
+              setEndYear={setEndYear}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
+            />
+          )}
         </div>
 
         {/* Results Header */}
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+          <h2
+            className="text-2xl lg:text-3xl font-bold bg-clip-text 
+                  text-transparent bg-gradient-to-r from-pink-500 to-purple-500"
+          >
             {getResultsText()}
           </h2>
 

@@ -3,9 +3,16 @@ import { createContext, useState, useEffect } from "react";
 export const WatchlistContext = createContext();
 
 export function WatchlistProvider({ children }) {
-  const [watchlist, setWatchlist] = useState([]);
+  const [watchlist, setWatchlist] = useState(() => {
+    const stored = localStorage.getItem("watchlist");
+    try {
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
 
-  // Load from localStorage on mount
+  // localStorage-eesee data load hiih
   useEffect(() => {
     const stored = localStorage.getItem("watchlist");
     if (stored) {
@@ -18,12 +25,12 @@ export function WatchlistProvider({ children }) {
     }
   }, []);
 
-  // Save to localStorage whenever watchlist changes
+  // watchlist uurchlugduh uyd localStorage-ruu hiih
   useEffect(() => {
     localStorage.setItem("watchlist", JSON.stringify(watchlist));
   }, [watchlist]);
 
-  // Add movie
+  // kino watchlist-d nemeh
   const addToWatchlist = (movie) => {
     setWatchlist((prev) => {
       if (!prev.find((m) => m.id === movie.id)) {
@@ -33,17 +40,17 @@ export function WatchlistProvider({ children }) {
     });
   };
 
-  // Remove movie
+  // kino watchlist-ees hasah
   const removeFromWatchlist = (id) => {
     setWatchlist((prev) => prev.filter((m) => m.id !== id));
   };
 
-  // Clear everything
+  // clear hiih
   const clearWatchlist = () => {
     setWatchlist([]);
   };
 
-  // Check if movie is in watchlist
+  // watchlist-d bgaag shalgah
   const isInWatchlist = (id) => {
     return watchlist.some((movie) => movie.id === id);
   };
