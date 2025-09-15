@@ -1,9 +1,10 @@
 import { useEffect, useState, useContext } from "react";
+import { ThemeContext } from "./context/ThemeContext.jsx";
+
 import Layout from "./components/Layout.jsx";
 import Searchbar from "./components/Searchbar.jsx";
 import Filters from "./components/Filters.jsx";
 import MovieGrid from "./components/MovieGrid.jsx";
-import { ThemeContext } from "./context/ThemeContext.jsx";
 
 export default function App() {
   const { darkMode } = useContext(ThemeContext);

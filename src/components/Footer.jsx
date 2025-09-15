@@ -9,7 +9,7 @@ export default function Footer() {
           <div className="text-center space-y-4">
             {/* Main attribution */}
             <div className="flex items-center justify-center gap-2 text-gray-300">
-              <span>Crafted by</span>
+              <span>Created by</span>
               <span className="font-semibold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
                 Tugssaikhan
               </span>
@@ -61,8 +61,7 @@ export default function Footer() {
 
             {/* Copyright */}
             <div className="text-xs text-gray-500 pt-2">
-              © {new Date().getFullYear()} Movie Recommendation App. All rights
-              reserved.
+              © {new Date().getFullYear()} Movie App. All rights reserved.
             </div>
           </div>
         </div>
